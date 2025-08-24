@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Invoice Template Form View -->
+        <record id="view_invoice_template_form" model="ir.ui.view">
+            <field name="name">invoice.template.form</field>
+            <field name="model">invoice.template</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Template">
+                    <header>
+                        <button name="preview_template" type="object" string="Preview" class="btn-primary"/>
+                        <button name="duplicate_template" type="object" string="Duplicate"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Template Name"/>
+                            </h1>
+                            <field name="description" placeholder="Template description..."/>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="template_type"/>
+                                <field name="is_default"/>
+                            </group>
+                            <group>
+                                <field name="font_family"/>
+                                <field name="font_size"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Design" name="design">
+                                <group>
+                                    <group string="Colors">
+                                        <field name="primary_color"/>
+                                        <field name="secondary_color"/>
+                                        <field name="text_color"/>
+                                        <field name="background_color"/>
+                                    </group>
+                                    <group string="Header">
+                                        <field name="show_company_logo"/>
+                                        <field name="logo_position" attrs="{'invisible': [('show_company_logo', '=', False)]}"/>
+                                        <field name="header_title"/>
+                                        <field name="header_subtitle"/>
+                                        <field name="show_header_border"/>
+                                    </group>
+                                </group>
+                                
+                                <group>
+                                    <group string="Table Style">
+                                        <field name="table_style"/>
+                                        <field name="show_table_headers"/>
+                                        <field name="table_header_color"/>
+                                    </group>
+                                    <group string="Footer">
+                                        <field name="show_footer_border"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Footer Content">
+                                    <field name="footer_text" widget="html"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Advanced" name="advanced">
+                                <group>
+                                    <field name="layout_structure"/>
+                                    <field name="custom_css"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Invoice Template Tree View -->
+        <record id="view_invoice_template_tree" model="ir.ui.view">
+            <field name="name">invoice.template.tree</field>
+            <field name="model">invoice.template</field>
+            <field name="arch" type="xml">
+                <tree string="Invoice Templates">
+                    <field name="name"/>
+                    <field name="template_type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="is_default"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Invoice Template Kanban View -->
+        <record id="view_invoice_template_kanban" model="ir.ui.view">
+            <field name="name">invoice.template.kanban</field>
+            <field name="model">invoice.template</field>
+            <field name="arch" type="xml">
+                <kanban string="Invoice Templates" class="o_kanban_dashboard">
+                    <field name="name"/>
+                    <field name="template_type"/>
+                    <field name="primary_color"/>
+                    <field name="is_default"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <strong><field name="name"/></strong>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <field name="template_type"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="o_kanban_card_content">
+                                    <div class="o_kanban_card_colorpicker">
+                                        <div t-attf-style="background-color: #{record.primary_color.raw_value}; width: 20px; height: 20px; border-radius: 50%; display: inline-block;"/>
+                                    </div>
+                                    
+                                    <div class="o_kanban_card_lower_content">
+                                        <div class="o_kanban_primary_left">
+                                            <button name="preview_template" type="object" class="btn btn-primary btn-sm">
+                                                Preview
+                                            </button>
+                                        </div>
+                                        <div class="o_kanban_primary_right">
+                                            <div t-if="record.is_default.raw_value" class="badge badge-success">Default</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+        <!-- Invoice Template Search View -->
+        <record id="view_invoice_template_search" model="ir.ui.view">
+            <field name="name">invoice.template.search</field>
+            <field name="model">invoice.template</field>
+            <field name="arch" type="xml">
+                <search string="Invoice Templates">
+                    <field name="name"/>
+                    <field name="template_type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Default" name="default" domain="[('is_default', '=', True)]"/>
+                    <separator/>
+                    <filter string="Modern" name="modern" domain="[('template_type', '=', 'modern')]"/>
+                    <filter string="Classic" name="classic" domain="[('template_type', '=', 'classic')]"/>
+                    <filter string="Professional" name="professional" domain="[('template_type', '=', 'professional')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Template Type" name="group_template_type" context="{'group_by': 'template_type'}"/>
+                        <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Actions -->
+        <record id="action_invoice_template" model="ir.actions.act_window">
+            <field name="name">Invoice Templates</field>
+            <field name="res_model">invoice.template</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_invoice_template_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first invoice template!
+                </p>
+                <p>
+                    Design professional invoice templates with our visual editor.
+                    Customize colors, fonts, layout, and branding to match your company style.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Main Menu -->
+        <menuitem id="menu_invoice_studio_main"
+                  name="Invoice Studio"
+                  sequence="50"
+                  web_icon="capsythe_invoice_studio,static/description/icon.png"/>
+        
+        <!-- Templates Menu -->
+        <menuitem id="menu_invoice_studio_templates"
+                  name="Templates"
+                  parent="menu_invoice_studio_main"
+                  sequence="10"
+                  action="action_invoice_template"/>
+        
+        <!-- Configuration Menu -->
+        <menuitem id="menu_invoice_studio_config"
+                  name="Configuration"
+                  parent="menu_invoice_studio_main"
+                  sequence="90"/>
+        
+        <!-- Settings Menu -->
+        <menuitem id="menu_invoice_studio_settings"
+                  name="Settings"
+                  parent="menu_invoice_studio_config"
+                  sequence="10"/>
+        
+    </data>
+</odoo>

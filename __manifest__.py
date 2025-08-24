@@ -46,8 +46,11 @@
     'license': 'OPL-1',
     'depends': [
         'base',
+        'account',
     ],
     'data': [
+        'views/invoice_template_views.xml',
+        'views/invoice_studio_menus.xml',
     ],
     'images': ['static/description/banner.png'],
     'installable': True,
